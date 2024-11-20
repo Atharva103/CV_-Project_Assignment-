@@ -16,10 +16,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 st.title("Image Transformations with Affine Transformations")
-st.write("Name: Anup Mallah")
-st.write("PRN: 0120200603")
-st.write("Roll no: 58")
-st.write("Seat no: B234133")
+st.write("Name: Atharva Lokhande")
+st.write("PRN: 202101040073")
+st.write("Roll no: 035")
 
 
 # Upload an image
