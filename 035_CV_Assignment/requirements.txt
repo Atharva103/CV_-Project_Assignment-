@@ -1,5 +1,4 @@
-Flask==2.2.2
-opencv-python==4.7.0.68
-numpy==1.24.3
-setuptools  # This includes distutils and might help resolve the issue
-streamlit  # Make sure Streamlit is installed as well
+distutils
+setuptools>=65.0.0
+pip>=24.0.0
+numpy==1.23.5
