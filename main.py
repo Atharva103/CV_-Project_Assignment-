@@ -1,7 +1,7 @@
 import os
-from flask import Flask, request, render_template, send_from_directory
 import cv2
 import numpy as np
+from flask import Flask, request, render_template, send_from_directory
 
 app = Flask(__name__)
 
@@ -39,48 +39,66 @@ def process_image():
     
     # Get selected transformations
     transformations = request.form.getlist('transformations')
+    if not transformations:
+        return "No transformations selected.", 400
+
     rows, cols, _ = image.shape
     processed_images = []
 
     # Apply transformations based on user input
     if 'translate' in transformations:
-        tx = int(request.form['tx'])
-        ty = int(request.form['ty'])
-        translation_matrix = np.float32([[1, 0, tx], [0, 1, ty]])
-        translated_image = cv2.warpAffine(image, translation_matrix, (cols, rows))
-        processed_images.append(('Translated', translated_image))
+        try:
+            tx = int(request.form['tx'])
+            ty = int(request.form['ty'])
+            translation_matrix = np.float32([[1, 0, tx], [0, 1, ty]])
+            translated_image = cv2.warpAffine(image, translation_matrix, (cols, rows))
+            processed_images.append(('Translated', translated_image))
+        except ValueError:
+            return "Invalid translation values.", 400
 
     if 'rotate' in transformations:
-        angle = int(request.form['angle'])
-        center = (cols // 2, rows // 2)
-        rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1)
-        rotated_image = cv2.warpAffine(image, rotation_matrix, (cols, rows))
-        processed_images.append(('Rotated', rotated_image))
+        try:
+            angle = int(request.form['angle'])
+            center = (cols // 2, rows // 2)
+            rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1)
+            rotated_image = cv2.warpAffine(image, rotation_matrix, (cols, rows))
+            processed_images.append(('Rotated', rotated_image))
+        except ValueError:
+            return "Invalid rotation angle.", 400
 
     if 'scale' in transformations:
-        scale_x = float(request.form['scale_x'])
-        scale_y = float(request.form['scale_y'])
-        scaled_image = cv2.resize(image, None, fx=scale_x, fy=scale_y)
-        processed_images.append(('Scaled', scaled_image))
+        try:
+            scale_x = float(request.form['scale_x'])
+            scale_y = float(request.form['scale_y'])
+            scaled_image = cv2.resize(image, None, fx=scale_x, fy=scale_y)
+            processed_images.append(('Scaled', scaled_image))
+        except ValueError:
+            return "Invalid scale values.", 400
 
     if 'shear' in transformations:
-        shear_x = float(request.form['shear_x'])
-        shear_y = float(request.form['shear_y'])
-        shearing_matrix = np.float32([[1, shear_x, 0], [shear_y, 1, 0]])
-        sheared_image = cv2.warpAffine(image, shearing_matrix, (cols, rows))
-        processed_images.append(('Sheared', sheared_image))
+        try:
+            shear_x = float(request.form['shear_x'])
+            shear_y = float(request.form['shear_y'])
+            shearing_matrix = np.float32([[1, shear_x, 0], [shear_y, 1, 0]])
+            sheared_image = cv2.warpAffine(image, shearing_matrix, (cols, rows))
+            processed_images.append(('Sheared', sheared_image))
+        except ValueError:
+            return "Invalid shearing values.", 400
 
     if 'flip' in transformations:
         flipped_image = cv2.flip(image, 1)
         processed_images.append(('Flipped', flipped_image))
 
     if 'crop' in transformations:
-        crop_x1 = int(request.form['crop_x1'])
-        crop_y1 = int(request.form['crop_y1'])
-        crop_x2 = int(request.form['crop_x2'])
-        crop_y2 = int(request.form['crop_y2'])
-        cropped_image = image[crop_y1:crop_y2, crop_x1:crop_x2]
-        processed_images.append(('Cropped', cropped_image))
+        try:
+            crop_x1 = int(request.form['crop_x1'])
+            crop_y1 = int(request.form['crop_y1'])
+            crop_x2 = int(request.form['crop_x2'])
+            crop_y2 = int(request.form['crop_y2'])
+            cropped_image = image[crop_y1:crop_y2, crop_x1:crop_x2]
+            processed_images.append(('Cropped', cropped_image))
+        except ValueError:
+            return "Invalid crop coordinates.", 400
 
     # For perspective, use a hardcoded transformation matrix (can be adjusted)
     if 'perspective' in transformations:
