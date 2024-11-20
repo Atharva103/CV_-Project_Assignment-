@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Transformation by Atharva Lokhande</title>
+    <style>
+        .slider {
+            width: 100%;
+        }
+        .param-group {
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        // JavaScript to dynamically show/hide input fields for transformations
+        function toggleParams() {
+            // Hide all transformation parameters first
+            const elements = document.getElementsByClassName('param-group');
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].style.display = 'none';
+            }
+
+            // Show only the selected transformations' parameters
+            let selectedTransformations = document.querySelectorAll('input[name="transformations"]:checked');
+            selectedTransformations.forEach((checkbox) => {
+                const transformationId = checkbox.value;
+                document.getElementById(transformationId).style.display = 'block'; // Show input group for selected transformation
+            });
+        }
+
+        // Function to display slider value dynamically
+        function updateSliderValue(sliderId, outputId) {
+            var value = document.getElementById(sliderId).value;
+            document.getElementById(outputId).innerHTML = value;
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome to Image Transformation by Atharva Lokhande</h1>
+    <p>PRN: 202101040073 | Roll No: 035</p>
+
+    <form action="/process" method="POST" enctype="multipart/form-data">
+        <label for="image">Upload Image:</label>
+        <input type="file" name="image" required><br><br>
+
+        <label for="transformations">Select transformations:</label><br>
+        <input type="checkbox" name="transformations" value="translate" onclick="toggleParams()"> Translate<br>
+        <input type="checkbox" name="transformations" value="rotate" onclick="toggleParams()"> Rotate<br>
+        <input type="checkbox" name="transformations" value="scale" onclick="toggleParams()"> Scale<br>
+        <input type="checkbox" name="transformations" value="shear" onclick="toggleParams()"> Shear<br>
+        <input type="checkbox" name="transformations" value="flip" onclick="toggleParams()"> Flip<br>
+        <input type="checkbox" name="transformations" value="crop" onclick="toggleParams()"> Crop<br>
+        <input type="checkbox" name="transformations" value="perspective" onclick="toggleParams()"> Perspective<br><br>
+
+        <!-- Translation input group -->
+        <div id="translate" class="param-group" style="display:none;">
+            <label for="tx">Translation X:</label>
+            <input type="range" id="tx" name="tx" min="-500" max="500" step="1" value="0" class="slider" onchange="updateSliderValue('tx', 'tx-value')">
+            <span id="tx-value">0</span><br>
+            <label for="ty">Translation Y:</label>
+            <input type="range" id="ty" name="ty" min="-500" max="500" step="1" value="0" class="slider" onchange="updateSliderValue('ty', 'ty-value')">
+            <span id="ty-value">0</span><br><br>
+        </div>
+
+        <!-- Rotation input group -->
+        <div id="rotate" class="param-group" style="display:none;">
+            <label for="angle">Rotation Angle:</label>
+            <input type="range" id="angle" name="angle" min="-180" max="180" step="1" value="0" class="slider" onchange="updateSliderValue('angle', 'angle-value')">
+            <span id="angle-value">0</span><br><br>
+        </div>
+
+        <!-- Scale input group -->
+        <div id="scale" class="param-group" style="display:none;">
+            <label for="scale_x">Scale X:</label>
+            <input type="range" id="scale_x" name="scale_x" min="0.1" max="3" step="0.1" value="1" class="slider" onchange="updateSliderValue('scale_x', 'scale_x-value')">
+            <span id="scale_x-value">1</span><br>
+            <label for="scale_y">Scale Y:</label>
+            <input type="range" id="scale_y" name="scale_y" min="0.1" max="3" step="0.1" value="1" class="slider" onchange="updateSliderValue('scale_y', 'scale_y-value')">
+            <span id="scale_y-value">1</span><br><br>
+        </div>
+
+        <!-- Shear input group -->
+        <div id="shear" class="param-group" style="display:none;">
+            <label for="shear_x">Shear X:</label>
+            <input type="range" id="shear_x" name="shear_x" min="-1" max="1" step="0.01" value="0" class="slider" onchange="updateSliderValue('shear_x', 'shear_x-value')">
+            <span id="shear_x-value">0</span><br>
+            <label for="shear_y">Shear Y:</label>
+            <input type="range" id="shear_y" name="shear_y" min="-1" max="1" step="0.01" value="0" class="slider" onchange="updateSliderValue('shear_y', 'shear_y-value')">
+            <span id="shear_y-value">0</span><br><br>
+        </div>
+
+        <!-- Flip input group (no params needed for flip) -->
+        <div id="flip" class="param-group" style="display:none;">
+            <p>No additional parameters required for flip.</p>
+        </div>
+
+        <!-- Crop input group -->
+        <div id="crop" class="param-group" style="display:none;">
+            <label for="crop_x1">Crop X1:</label>
+            <input type="range" id="crop_x1" name="crop_x1" min="0" max="500" step="1" value="50" class="slider" onchange="updateSliderValue('crop_x1', 'crop_x1-value')">
+            <span id="crop_x1-value">50</span><br>
+            <label for="crop_y1">Crop Y1:</label>
+            <input type="range" id="crop_y1" name="crop_y1" min="0" max="500" step="1" value="50" class="slider" onchange="updateSliderValue('crop_y1', 'crop_y1-value')">
+            <span id="crop_y1-value">50</span><br>
+            <label for="crop_x2">Crop X2:</label>
+            <input type="range" id="crop_x2" name="crop_x2" min="0" max="500" step="1" value="200" class="slider" onchange="updateSliderValue('crop_x2', 'crop_x2-value')">
+            <span id="crop_x2-value">200</span><br>
+            <label for="crop_y2">Crop Y2:</label>
+            <input type="range" id="crop_y2" name="crop_y2" min="0" max="500" step="1" value="300" class="slider" onchange="updateSliderValue('crop_y2', 'crop_y2-value')">
+            <span id="crop_y2-value">300</span><br><br>
+        </div>
+
+        <!-- Perspective input group -->
+        <div id="perspective" class="param-group" style="display:none;">
+            <p>No additional parameters required for perspective (hardcoded).</p>
+        </div>
+
+        <input type="submit" value="Process Image">
+    </form>
+</body>
+</html>
