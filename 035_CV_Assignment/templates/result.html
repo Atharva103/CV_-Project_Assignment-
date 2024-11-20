@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processed Image Results</title>
+</head>
+<body>
+    <h1>Processed Image Results</h1>
+    <p> Atharva Lokhande</p>
+    <p>PRN: 202101040073 | Roll No: 035</p>
+    
+    <h2>Processed Images:</h2>
+    {% for name, img_path in results %}
+        <h3>{{ name }}</h3>
+        <img src="{{ img_path }}" alt="{{ name }}" width="300"><br>
+    {% endfor %}
+    
+    <br><br>
+    <a href="/">Back to Home</a>
+</body>
+</html>
